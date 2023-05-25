@@ -3,15 +3,15 @@ package com.example.demo.controller;
 import com.example.demo.entity.Book;
 import com.example.demo.services.BookService;
 import com.example.demo.services.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/book")
@@ -39,8 +39,35 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public String addBook(@ModelAttribute("book") Book book){
+    public String addBook(@Valid @ModelAttribute("book") Book book, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "book/add";
+        }
         bookService.addBook(book);
+        return  "redirect:/book";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editBookForm(@PathVariable("id") Long id, Model model) {
+        if (bookService.getBookById(id) != null) {
+            model.addAttribute("book", bookService.getBookById(id));
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "book/edit";
+        } else {
+            return "not-found";
+        }
+    }
+
+    @PostMapping("/edit")
+    public String editBook(@ModelAttribute("book") Book updatedBook) {
+        bookService.updateBook(updatedBook);
+        return "redirect:/book";
+    }
+
+    @GetMapping("/delete/{id}")
+    public  String deleteBook(@PathVariable("id") Long id) {
+        bookService.deleteBook(id);
         return "redirect:/book";
     }
 }
