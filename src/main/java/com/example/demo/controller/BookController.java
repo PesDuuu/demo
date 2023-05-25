@@ -50,8 +50,9 @@ public class BookController {
 
     @GetMapping("/edit/{id}")
     public String editBookForm(@PathVariable("id") Long id, Model model) {
-        if (bookService.getBookById(id) != null) {
-            model.addAttribute("book", bookService.getBookById(id));
+        Book ediBook = bookService.getBookById(id);
+        if (ediBook != null) {
+            model.addAttribute("book", ediBook);
             model.addAttribute("categories", categoryService.getAllCategories());
             return "book/edit";
         } else {

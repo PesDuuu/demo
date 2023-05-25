@@ -15,9 +15,9 @@ public class Book {
     private Long id;
 
     @Column(name = "title")
-    private String title;
     @NotEmpty(message = "Title must not be empty")
     @Size(max = 50, min = 1, message = "Title must be less than 50 characters")
+    private String title;
 
     @Column(name = "author")
     private String author;

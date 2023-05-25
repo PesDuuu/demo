@@ -30,7 +30,7 @@
                 <option value="">-- Select Category --</option>
                 <option th:each="category : ${categories}" th:value="${category.id}"
                         th:text="${category.name}"></option>
-            </select>a
+            </select>
             <span class="text-danger" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
         </div>
         <input type="submit" class="btn btn-primary" value="Save">
